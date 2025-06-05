@@ -7,7 +7,7 @@ Created on Wed Jun  4 23:32:52 2025
 
 import numpy as np
 import secrets
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 class GeneradorAleatorio:
     def __init__(self):
@@ -21,8 +21,8 @@ class GeneradorAleatorio:
         -------
         None
         '''
-        self.__semilla_segura = secrets.randbits(64)
-        self.__rng = np.random.default_rng(self.semilla_segura)
+        semilla_segura = secrets.randbits(64)
+        self.__rng = np.random.default_rng(semilla_segura)
 
     def flotante(self, minimo: float = 0, maximo: float = 1):
         ''' Genera un número flotante aleatorio en el intervalo [minimo, maximo).
@@ -68,8 +68,8 @@ class GeneradorAleatorio:
         (np.ndarray): Arreglo de números enteros aleatorios.
         
         '''
-        return self.__rng.integers(minimo, maximo + 1, size = simulaciones)
-
+        return self.__rng.integers(minimo, maximo + 1, size=simulaciones)
+    
     def graficar_frecuencia_enteros(self, minimo: int, maximo: int, simulaciones):
         ''' Genera números aleatorios enteros y grafica su frecuencia de aparición.
 
@@ -84,8 +84,8 @@ class GeneradorAleatorio:
         None
         
         '''
-        datos = self.__vector_enteros(minimo, maximo, simulaciones)
-        valores, frecuencias = np.unique(datos, return_counts = True)
+        datos = self.vector_enteros(minimo, maximo, simulaciones)
+        valores, frecuencias = np.unique(datos, return_counts=True)
 
         plt.figure(figsize=(12, 6))
         plt.bar(valores, frecuencias, color='mediumseagreen', edgecolor='black')
@@ -96,4 +96,7 @@ class GeneradorAleatorio:
         plt.grid(axis='y', linestyle='--', alpha=0.6)
         plt.tight_layout()
         plt.show()
+
         
+j = GeneradorAleatorio()
+j.graficar_frecuencia_enteros(0, 36, 10)
