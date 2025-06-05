@@ -97,6 +97,4 @@ class GeneradorAleatorio:
         plt.tight_layout()
         plt.show()
 
-        
-j = GeneradorAleatorio()
-j.graficar_frecuencia_enteros(0, 36, 10)
+    
