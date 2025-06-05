@@ -2,7 +2,7 @@
 """
 Created on Mon Jun  2 22:42:42 2025
 
-@author: Jeikel Navarro Solis
+@authors: Jeikel Navarro; Cristofer Urrutia; Erick Venegas
 """
 
 from GeneradorAleatorio import GeneradorAleatorio

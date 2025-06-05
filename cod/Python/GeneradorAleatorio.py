@@ -2,7 +2,7 @@
 """
 Created on Wed Jun  4 23:32:52 2025
 
-@author: Jeikel Navarro Solis
+@authors: Jeikel Navarro; Cristofer Urrutia; Erick Venegas
 """
 
 import numpy as np
@@ -17,9 +17,6 @@ class GeneradorAleatorio:
         ----------
         None
 
-        Retorna
-        -------
-        None
         '''
         semilla_segura = secrets.randbits(64)
         self.__rng = np.random.default_rng(semilla_segura)

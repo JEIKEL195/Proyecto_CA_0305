@@ -2,7 +2,7 @@
 """
 Created on Mon Jun  2 23:17:05 2025
 
-@author: Jeikel Navarro Solis
+@authors: Jeikel Navarro; Cristofer Urrutia; Erick Venegas
 """
 
 class ApuestaRuleta:
@@ -14,10 +14,6 @@ class ApuestaRuleta:
         tipo (str): Tipo de apuesta ('numero', 'color', 'paridad', 'alto_bajo', 'docena', 'columna').
         valor: Valor apostado (puede ser número entero o cadena, dependiendo del tipo de apuesta).
         monto (float): Monto de dinero apostado.
-
-        Retorna
-        -------
-        None
         
         '''
         self.__tipo = tipo

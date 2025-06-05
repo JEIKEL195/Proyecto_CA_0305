@@ -2,7 +2,7 @@
 """
 Created on Thu Jun  5 01:44:40 2025
 
-@author: jeike
+@authors: Jeikel Navarro; Cristofer Urrutia; Erick Venegas
 """
 from ApuestaRuleta import ApuestaRuleta
 
@@ -15,10 +15,6 @@ class JugadorRuleta:
         nombre (str): Nombre del jugador.
         saldo_inicial (float): Saldo inicial disponible.
 
-        Retorna
-        -------
-        None
-        
         '''
         self.__nombre = nombre
         self.__saldo = saldo_inicial
@@ -40,6 +36,7 @@ class JugadorRuleta:
         '''
         return self.__nombre
     
+    
     @property 
     def saldo(self):
         ''' Obtiene el saldo actual del jugador.
@@ -54,6 +51,7 @@ class JugadorRuleta:
         
         '''
         return self.__saldo
+    
     
     @nombre.setter 
     def nombre(self, new_value: str):
@@ -98,6 +96,7 @@ class JugadorRuleta:
         
         return apuesta
 
+
     def actualizar_saldo(self, resultado_ruleta):
         '''Actualiza el saldo en función del resultado de la ruleta.
 
@@ -107,7 +106,8 @@ class JugadorRuleta:
 
         Retorna
         -------
-        float: Ganancia neta (puede ser negativa).
+        (float): Ganancia neta (puede ser negativa).
+        
         '''
         ganancia_total = 0
         for apuesta in self.__apuestas:
