@@ -18,8 +18,8 @@ class GeneradorAleatorio:
         None
 
         '''
-        semilla_segura = secrets.randbits(64)
-        self.__rng = np.random.default_rng(semilla_segura)
+        self.__semilla_segura = secrets.randbits(64)
+        self.__rng = np.random.default_rng(self.__semilla_segura)
 
     def flotante(self, minimo: float = 0, maximo: float = 1):
         ''' Genera un número flotante aleatorio en el intervalo [minimo, maximo).

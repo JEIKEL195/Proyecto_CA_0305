@@ -5,6 +5,7 @@ Created on Thu Jun  5 01:44:40 2025
 @authors: Jeikel Navarro; Cristofer Urrutia; Erick Venegas
 """
 from ApuestaRuleta import ApuestaRuleta
+import matplotlib.pyplot as plt
 
 class JugadorRuleta:
     def __init__(self, nombre: str, saldo_inicial: float):
@@ -19,6 +20,7 @@ class JugadorRuleta:
         self.__nombre = nombre
         self.__saldo = saldo_inicial
         self.__apuestas = []
+        self.__historial_saldo = [saldo_inicial]
         
         
     @property
@@ -83,10 +85,7 @@ class JugadorRuleta:
         Apuesta (ApuestaRuleta): Objeto de tipo Apuesta si válida, o None.
         
         '''
-        if (monto <= 0):
-            return None
-        
-        if (monto > self.__saldo):
+        if (monto <= 0) or (monto > self.__saldo):
             return None
 
         apuesta = ApuestaRuleta(tipo, valor, monto)
@@ -110,9 +109,34 @@ class JugadorRuleta:
         
         '''
         ganancia_total = 0
+        
         for apuesta in self.__apuestas:
             resultado = apuesta.calcular_pago_total(resultado_ruleta)
             self.__saldo += resultado
             ganancia_total += resultado
+            
         self.__apuestas = []  # limpia apuestas después del giro
+        self.__historial_saldo.append(self.__saldo)
+        
         return ganancia_total
+    
+    def graficar_saldo(self):
+        '''Grafica la trayectoria del saldo del jugador durante el juego.
+
+        Parámetros
+        ----------
+        None
+        
+        Retorna
+        -------
+        None
+        
+        '''
+        plt.figure(figsize=(10, 5))
+        plt.plot(self.__historial_saldo, marker='o', linestyle='-', color='green')
+        plt.title(f'Trayectoria del saldo del jugador: {self.__nombre}')
+        plt.xlabel('Número de jugadas')
+        plt.ylabel('Saldo')
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()
