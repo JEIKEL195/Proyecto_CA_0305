@@ -11,29 +11,89 @@ import matplotlib as plt
 
 class GeneradorAleatorio:
     def __init__(self):
-        semilla_segura = secrets.randbits(64)
-        self.__rng = np.random.default_rng(semilla_segura)
+        ''' Inicializa una instancia del generador de números pseudoaleatorios.
 
-    def flotante(self, minimo=0.0, maximo=1.0):
+        Parámetros
+        ----------
+        None
+
+        Retorna
+        -------
+        None
+        '''
+        self.__semilla_segura = secrets.randbits(64)
+        self.__rng = np.random.default_rng(self.semilla_segura)
+
+    def flotante(self, minimo: float = 0, maximo: float = 1):
+        ''' Genera un número flotante aleatorio en el intervalo [minimo, maximo).
+
+        Parámetros
+        ----------
+        minimo (float): Límite inferior del intervalo (incluido). Por defecto es 0.
+        maximo (float): Límite superior del intervalo (excluido). Por defecto es 1.
+
+        Retorna
+        -------
+        (float): Número aleatorio flotante en el rango [minimo, maximo).
+        
+        ''' 
         return self.__rng.uniform(minimo, maximo)
 
-    def entero(self, minimo, maximo):
+    def entero(self, minimo: int, maximo: int):
+        ''' Genera un número entero aleatorio entre minimo y maximo (inclusive).
+
+        Parámetros
+        ----------
+        minimo (int): Límite inferior del rango (incluido).
+        maximo (int): Límite superior del rango (incluido).
+
+        Retorna
+        -------
+        (int): Número entero aleatorio entre minimo y maximo.
+        
+        '''
         return self.__rng.integers(minimo, maximo + 1)
     
-    def vector_enteros(self, minimo, maximo, n):
-        return self.rng.integers(minimo, maximo + 1, size=n)
+    def vector_enteros(self, minimo: int, maximo: int, simulaciones):
+        ''' Genera un vector de números enteros aleatorios en el intervalo [minimo, maximo].
 
-    def graficar_frecuencia_enteros(self, minimo, maximo, n=1000):
-        """Genera n números enteros en [minimo, maximo] y grafica su frecuencia."""
-        datos = self.vector_enteros(minimo, maximo, n)
-        valores, frecuencias = np.unique(datos, return_counts=True)
+        Parámetros
+        ----------
+        minimo (int): Límite inferior del rango (incluido).
+        maximo (int): Límite superior del rango (incluido).
+        simulaciones (int): Número de valores a generar.
+
+        Retorna
+        -------
+        (np.ndarray): Arreglo de números enteros aleatorios.
+        
+        '''
+        return self.__rng.integers(minimo, maximo + 1, size = simulaciones)
+
+    def graficar_frecuencia_enteros(self, minimo: int, maximo: int, simulaciones):
+        ''' Genera números aleatorios enteros y grafica su frecuencia de aparición.
+
+        Parámetros
+        ----------
+        minimo (int): Límite inferior del rango (incluido).
+        maximo (int): Límite superior del rango (incluido).
+        simulaciones (int): Número total de simulaciones a realizar.
+
+        Retorna
+        -------
+        None
+        
+        '''
+        datos = self.__vector_enteros(minimo, maximo, simulaciones)
+        valores, frecuencias = np.unique(datos, return_counts = True)
 
         plt.figure(figsize=(12, 6))
         plt.bar(valores, frecuencias, color='mediumseagreen', edgecolor='black')
-        plt.title(f"Frecuencia de {n} números aleatorios en [{minimo}, {maximo}]")
+        plt.title(f"Frecuencia de {simulaciones} números aleatorios en [{minimo}, {maximo}]")
         plt.xlabel("Número")
         plt.ylabel("Frecuencia")
         plt.xticks(np.arange(minimo, maximo + 1))
         plt.grid(axis='y', linestyle='--', alpha=0.6)
         plt.tight_layout()
         plt.show()
+        
