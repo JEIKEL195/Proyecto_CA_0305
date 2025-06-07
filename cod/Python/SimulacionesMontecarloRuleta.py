@@ -353,6 +353,87 @@ class SimulacionesMontecarloRuleta:
             self.__historial_tiempo.append(tiempo)
             
         return self.estadisticas()
+    
+    
+    def james_bond_hasta_objetivo(self, monto_base: float, factor_objetivo: float):
+        '''Estrategia James Bond generalizada hasta alcanzar un objetivo de saldo.'''
+        
+        self.__resultados.clear()
+        self.__historiales.clear()
+        self.__historial_tiempo.clear()
+        self.__exitos = 0
+        
+        total_apuesta = 200 * monto_base  # Escalable
+    
+        for _ in range(self.__ctd_simulaciones):
+            ruleta = Ruleta()
+            jugador = JugadorRuleta(self.__jugador_original.nombre, self.__jugador_original.saldo)
+            saldo_objetivo = factor_objetivo * jugador.saldo
+            historial = [jugador.saldo]
+            
+            tiempo = 0
+    
+            while (jugador.saldo >= total_apuesta) and (jugador.saldo < saldo_objetivo):
+                apuesta_alta = 0.70 * total_apuesta
+                apuesta_media = 0.25 * total_apuesta
+                apuesta_cero = 0.05 * total_apuesta
+    
+                jugador.hacer_apuesta('alto_bajo', 'alto', apuesta_alta)
+                jugador.hacer_apuesta('seisena', 3, apuesta_media)
+                jugador.hacer_apuesta('numero', 0, apuesta_cero)
+    
+                resultado = ruleta.girar()
+                jugador.actualizar_saldo(resultado)
+                historial.append(jugador.saldo)
+                
+                tiempo += 1
+    
+            if(jugador.saldo >= saldo_objetivo):
+                self.__exitos += 1
+    
+            self.__resultados.append(jugador.saldo)
+            self.__historiales.append(historial)
+            self.__historial_tiempo.append(tiempo)
+            
+        return self.estadisticas()
+    
+    
+    
+    def apuesta_fija_hasta_objetivo(self, monto_inicial: float, factor_objetivo: float):
+        '''Estrategia apuesta fija hasta alcanzar un objetivo de saldo.'''
+        
+        self.__resultados.clear()
+        self.__historiales.clear()
+        self.__historial_tiempo.clear()
+        self.__exitos = 0
+    
+        for _ in range(self.__ctd_simulaciones):
+            ruleta = Ruleta()
+            jugador = JugadorRuleta(self.__jugador_original.nombre, self.__jugador_original.saldo)
+            saldo_objetivo = factor_objetivo * jugador.saldo
+            historial = [jugador.saldo]
+            
+            tiempo = 0
+    
+            while 0 < jugador.saldo < saldo_objetivo:
+                
+                jugador.hacer_apuesta('seisena', 3, monto_inicial)
+
+                resultado = ruleta.girar()
+                jugador.actualizar_saldo(resultado)
+                historial.append(jugador.saldo)
+                
+                tiempo += 1
+    
+            if(jugador.saldo >= saldo_objetivo):
+                self.__exitos += 1
+    
+            self.__resultados.append(jugador.saldo)
+            self.__historiales.append(historial)
+            self.__historial_tiempo.append(tiempo)
+            
+        return self.estadisticas()
+
 
 
 
@@ -459,20 +540,23 @@ class SimulacionesMontecarloRuleta:
         plt.show()
 
     
-jugador = JugadorRuleta(nombre = "Venegas", saldo_inicial = 100)
-sim = SimulacionesMontecarloRuleta(jugador, 10000, 3)
+jugador = JugadorRuleta(nombre = "Venegas", saldo_inicial = 200)
+sim = SimulacionesMontecarloRuleta(jugador, 1_000, 3)
 #sim.simular_martingala('paridad', 'par', 1000)
 #sim.martingala_hasta_objetivo('paridad', 'par', 1, 1.2)
 #sim.martingala_inversa_hasta_objetivo('paridad', 'par', 10, 1.5)
 #sim.fibonacci_hasta_objetivo('paridad', 'par', 10, 1.1)
 #sim.oscars_grind_hasta_objetivo('paridad', 'par', 10, 2)
 
-sim.uno_tres_dos_seis_hasta_objetivo('paridad', 'par', 1, 1.2)
+#sim.uno_tres_dos_seis_hasta_objetivo('paridad', 'par', 1, 1.2)
 
+#sim.james_bond_hasta_objetivo(1, 2)
+#sim.apuesta_fija_hasta_objetivo(10, 1.2)
 
 #sim.comparar_estrategias('paridad', 'par', 10, [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2])
 
 
 #sim.graficar_probabilidad(2, [10, 100, 1000, 10_000])
 #sim.estadisticas()
+
 
