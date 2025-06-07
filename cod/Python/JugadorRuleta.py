@@ -20,7 +20,7 @@ class JugadorRuleta:
         self.__nombre = nombre
         self.__saldo = saldo_inicial
         self.__apuestas = []
-        self.__historial_saldo = [saldo_inicial]
+        self.__historial = [saldo_inicial]
         
         
     @property
@@ -71,6 +71,9 @@ class JugadorRuleta:
         self.__nombre = new_value
         
     
+    def get_historial(self):
+        return self.__historial
+    
     def hacer_apuesta(self, tipo: str, valor, monto: float):
         '''Crea una apuesta si el monto es válido.
 
@@ -116,7 +119,7 @@ class JugadorRuleta:
             ganancia_total += resultado
             
         self.__apuestas = []  # limpia apuestas después del giro
-        self.__historial_saldo.append(self.__saldo)
+        self.__historial.append(self.__saldo)
         
         return ganancia_total
     
