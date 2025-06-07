@@ -55,7 +55,7 @@ class Craps:
     def riqueza(self, nueva_riqueza):
         self.__riqueza = nueva_riqueza
     
-    @numero_apuestas
+    @numero_apuestas.setter
     def numero_apuestas(self, nuevo_numero_apuestas):
         self.__numero_apuestas = nuevo_numero_apuestas
     
@@ -209,7 +209,7 @@ class Craps:
              markeredgecolor='black',
              markeredgewidth=1)
 
-# Etiquetas y título
+
         plt.xlabel('Número de apuestas')
         plt.ylabel('Riqueza')
         plt.title('Evolución de la Riqueza en el Tiempo')
