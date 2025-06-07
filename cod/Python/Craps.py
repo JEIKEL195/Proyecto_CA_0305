@@ -19,13 +19,48 @@ class Craps:
         self.__riqueza = []
         self.__numero_apuestas = 0
     
-    # Faltan gets y str donde se especifiquen cuanto gana si sale tal número.
-    
+    @property
     def riqueza(self):
         return self.__riqueza
     
-    def apuestas(self):
+    @property
+    def numero_apuestas(self):
         return self.__numero_apuestas
+   
+    @property
+    def sumas_ganadoras(self):
+        return self.__sumas_ganadoras
+    
+    @property
+    def sumas_perdedoras(self):
+        return self.__sumas_perdedoras
+    
+    @property
+    def sumas_punto(self):
+        return self.__sumas_punto
+    
+    @sumas_ganadoras.setter
+    def sumas_ganadoras(self, nuevas_sumas_ganadoras):
+        self.__sumas_ganadoras = nuevas_sumas_ganadoras
+    
+    @sumas_perdedoras.setter
+    def sumas_perdedoras(self, nuevas_sumas_perdedoras):
+        self.__sumas_perdedoras = nuevas_sumas_perdedoras
+    
+    @sumas_punto.setter
+    def sumas_punto(self, nuevas_sumas_punto):
+        self.__sumas_punto = nuevas_sumas_punto
+    
+    @riqueza.setter
+    def riqueza(self, nueva_riqueza):
+        self.__riqueza = nueva_riqueza
+    
+    @numero_apuestas
+    def numero_apuestas(self, nuevo_numero_apuestas):
+        self.__numero_apuestas = nuevo_numero_apuestas
+    
+    def __str__(self):
+        return f'Para ganar en el Come Out Roll, tu suma debe estar en: \n{self.__sumas_ganadoras} \nPara perder en el Come Out Roll, tu suma debe estar en: \n{self.__sumas_perdedoras} \nSi sacas otra suma, entras al punto: \nGanas si tu suma es igual a tu suma anterior y sale antes que el 7. \nSi sacas 7 primero pierdes'    
     
     def dinero_apuesta(self, dinero_apuesta):
         self.__riqueza.append(dinero_apuesta)
@@ -39,6 +74,19 @@ class Craps:
         
         return dado1 + dado2
     
+    def odds_pass(self, punto):
+        
+        match punto:
+            
+            case 4 | 10: 
+                return 2
+            
+            case 5 | 9:
+                return 1.5
+            
+            case 6 | 8:
+                return 1.2
+    
     def punto_pass_line(self, suma_dados_vieja, suma_dados_nueva):
         
         if suma_dados_nueva == 7:
@@ -48,6 +96,7 @@ class Craps:
             return True
         
         else:
+            
             suma_dados = self.lanzar_dados()
             return self.punto_pass_line(suma_dados_nueva, suma_dados)
             
@@ -144,15 +193,13 @@ class Craps:
                 self.__riqueza.append(self.__riqueza[self.__numero_apuestas - 1]*(1 + porcentaje_apuesta))
                 return 'Ganaste'
             
-
+            
     def graficar_riqueza(self):
         
         apuestas = range(self.__numero_apuestas + 1)
 
-        # Línea base (opcional, para unir puntos con estilo punteado)
         plt.plot(apuestas, self.__riqueza, linestyle=':', color='#C0392B', linewidth=1)
 
-        # Graficar cada punto con color dinámico
         for i in range(1, len(self.__riqueza)):
             color = 'green' if self.__riqueza[i] > self.__riqueza[i - 1] else 'red'
             plt.plot(apuestas[i], self.__riqueza[i], 
@@ -170,29 +217,11 @@ class Craps:
         plt.tight_layout()
         plt.show()
     
-            
+    
 apuesta1 = Craps()
 apuesta1.dinero_apuesta(1000)
-apuesta1.dont_pass_line(0.1)
-apuesta1.dont_pass_line(0.1)
-apuesta1.dont_pass_line(0.1)
-apuesta1.dont_pass_line(0.1)
-apuesta1.dont_pass_line(0.1)
-apuesta1.dont_pass_line(0.1)
-apuesta1.dont_pass_line(0.1)
-apuesta1.dont_pass_line(0.1)
-apuesta1.dont_pass_line(0.1)
-apuesta1.dont_pass_line(0.1)
-apuesta1.dont_pass_line(0.1)
-apuesta1.dont_pass_line(0.1)
-apuesta1.dont_pass_line(0.1)
-apuesta1.dont_pass_line(0.1)
-apuesta1.dont_pass_line(0.1)
-apuesta1.dont_pass_line(0.1)
-apuesta1.dont_pass_line(0.1)
-apuesta1.dont_pass_line(0.1)
-apuesta1.dont_pass_line(0.1)
-apuesta1.dont_pass_line(0.1)
-apuesta1.dont_pass_line(0.1)
+apuesta1.dont_pass_line(0.05)
+
+
 
 apuesta1.graficar_riqueza()
