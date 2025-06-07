@@ -191,7 +191,7 @@ class SimulacionesMontecarloRuleta:
         return self.estadisticas()
         
         
-    def fibonacci_hasta_objetivo(self, tipo_apuesta: str, valor_apuesta, monto_base: float, factor_objetivo: float):
+    def fibonacci_hasta_objetivo(self, tipo_apuesta: str, valor_apuesta, monto_inicial: float, factor_objetivo: float):
         '''Simula la estrategia Fibonacci hasta alcanzar el objetivo de capital o quedarse sin saldo.'''
     
         self.__resultados.clear()
@@ -214,7 +214,7 @@ class SimulacionesMontecarloRuleta:
             tiempo = 0
     
             while 0 < jugador.saldo < saldo_objetivo:
-                apuesta_actual = secuencia[indice] * monto_base
+                apuesta_actual = secuencia[indice] * monto_inicial
     
                 if(apuesta_actual > jugador.saldo):
                     break  # no puede apostar más
@@ -245,14 +245,74 @@ class SimulacionesMontecarloRuleta:
             self.__historial_tiempo.append(tiempo)
     
         return self.estadisticas()
+    
+    
+    def oscars_grind_hasta_objetivo(self, tipo_apuesta: str, valor_apuesta, monto_inicial: float, factor_objetivo: float):
+        '''Estrategia Oscar's Grind: progresa moderadamente hasta alcanzar el objetivo.'''
+        
+        self.__resultados.clear()
+        self.__historiales.clear()
+        self.__historial_tiempo.clear()
+        self.__exitos = 0
+        
+        for _ in range(self.__ctd_simulaciones):
+            ruleta = Ruleta()
+            jugador = JugadorRuleta(self.__jugador_original.nombre, self.__jugador_original.saldo)
+            saldo_inicial = jugador.saldo
+            saldo_objetivo = factor_objetivo * saldo_inicial
+            ganancia_total = 0
+            monto_actual = monto_inicial
+            
+            historial = [jugador.saldo]
+            
+            tiempo = 0
+            
+            while (jugador.saldo >= monto_actual) and (jugador.saldo < saldo_objetivo):
+                jugador.hacer_apuesta(tipo_apuesta, valor_apuesta, monto_actual)
+                saldo_antes = jugador.saldo
+                resultado = ruleta.girar()
+                jugador.actualizar_saldo(resultado)
+                saldo_despues = jugador.saldo
+                
+                ganancia = saldo_despues - saldo_antes
+                ganancia_total += ganancia
+                
+                if(ganancia > 0):
+                    if((ganancia_total + monto_inicial) <= (saldo_objetivo - saldo_inicial)):
+                        monto_actual += monto_inicial # Si la ganancia total no supera el objetivo, se aumenta 1 unidad
+                    else:
+                        monto_actual = monto_inicial  # reinicia la apuesta
+                elif(ganancia < 0):
+                    pass # Apuesta no cambia tras pérdida
+                else:
+                    monto_actual = monto_inicial
+    
+                historial.append(jugador.saldo)
+                
+                tiempo += 1
+                
+            if(jugador.saldo >= saldo_objetivo):
+                self.__exitos += 1
+            
+            self.__resultados.append(jugador.saldo)
+            self.__historiales.append(historial)
+            self.__historial_tiempo.append(tiempo)
+    
+        return self.estadisticas()
 
 
     def estadisticas(self):
         ''' Retorna resumen estadístico de las simulaciones. '''
+        prob = self.__exitos / self.__ctd_simulaciones
+        simulaciones = self.__ctd_simulaciones
+        
+        ic = 1.96 * np.sqrt(prob * (1 - prob) / simulaciones)
+        
         return {
             'Éxitos': self.__exitos,
-            'Fracasos': self.__ctd_simulaciones - self.__exitos,
-            'Probabilidad_éxito': self.__exitos / self.__ctd_simulaciones,
+            'Fracasos': simulaciones - self.__exitos,
+            'Probabilidad_éxito': prob,
+            'IC del 95%': [prob - ic, prob + ic],
             'Promedio_capital_final': np.mean(self.__resultados),
             'desviacion_std': np.std(self.__resultados),
             'Máximo': max(self.__resultados),
@@ -307,4 +367,38 @@ class SimulacionesMontecarloRuleta:
         plt.show()
         
         
- 
+    def comparar_estrategias(self, tipo_apuesta: str, valor_apuesta, monto: float, factores_objetivo: list):
+        '''Compara la probabilidad de éxito de Martingala vs Fibonacci para diferentes factores objetivo.'''
+    
+        resultados1 = []
+        resultados2 = []
+    
+        for factor in factores_objetivo:
+            
+            self.__resultados.clear()
+            self.__historiales.clear()
+    
+            self.martingala_hasta_objetivo(tipo_apuesta, valor_apuesta, monto, factor)
+            exitos1 = sum(1 for saldo in self.__resultados
+                          if saldo >= factor * self.__jugador_original.saldo)
+            resultados1.append(exitos1 / len(self.__resultados))
+    
+            self.__resultados.clear()
+            self.__historiales.clear()
+    
+            self.fibonacci_hasta_objetivo(tipo_apuesta, valor_apuesta, monto, factor)
+            exitos2 = sum(1 for saldo in self.__resultados
+                          if saldo >= factor * self.__jugador_original.saldo)
+            resultados2.append(exitos2 / len(self.__resultados))
+    
+
+        plt.plot(factores_objetivo, resultados1, label = "Martingala", marker='o')
+        plt.plot(factores_objetivo, resultados2, label = "Fibonacci", marker='s')
+        plt.xlabel("Factor objetivo (veces el capital)")
+        plt.ylabel("Probabilidad de éxito")
+        plt.title("Comparación de estrategias de ruleta")
+        plt.grid(True)
+        plt.ylim(0, 1)
+        plt.legend()
+        plt.tight_layout()
+        plt.show()
