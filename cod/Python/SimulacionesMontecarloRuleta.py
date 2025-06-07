@@ -29,6 +29,8 @@ class SimulacionesMontecarloRuleta:
         self.__ctd_jugadas = ctd_jugadas
         self.__resultados = []
         self.__historiales = []
+        self.__historial_tiempo = []
+        self.__exitos = 0
 
     def simular(self, tipo_apuesta: str, valor_apuesta, monto: float):
         for simulacion in range(self.__ctd_simulaciones):
@@ -47,15 +49,6 @@ class SimulacionesMontecarloRuleta:
             self.__resultados.append(jugador.saldo)
             
         return self.__resultados
-
-    def estadisticas(self):
-        ''' Retorna resumen estadístico de las simulaciones. '''
-        return {
-            'promedio_final': np.mean(self.__resultados),
-            'desviacion_std': np.std(self.__resultados),
-            'maximo': max(self.__resultados),
-            'minimo': min(self.__resultados)
-        }
     
     def simular_varias_apuestas(self, apuestas: list, num_jugadas: int):
         ''' Ejecuta una simulación con distintas apuestas.
@@ -115,10 +108,10 @@ class SimulacionesMontecarloRuleta:
         
         self.__resultados.clear()
         self.__historiales.clear()
+        self.__historial_tiempo.clear()
+        self.__exitos = 0
         
         saldo_objetivo = self.__jugador_original.saldo * factor_objetivo
-        historial_tiempo = []
-        exitos = 0
     
         for simulacion in range(self.__ctd_simulaciones):
             ruleta = Ruleta()
@@ -144,22 +137,14 @@ class SimulacionesMontecarloRuleta:
                 tiempo += 1
     
             if jugador.saldo >= saldo_objetivo:
-                exitos += 1
+                self.__exitos += 1
     
             self.__historiales.append(historial)
             self.__resultados.append(jugador.saldo)
-            historial_tiempo.append(tiempo)
-    
-        probabilidad_exito = exitos / self.__ctd_simulaciones
+            self.__historial_tiempo.append(tiempo)
         
-        tiempo_promedio = sum(historial_tiempo)/self.__ctd_simulaciones
         
-        return {
-            'Éxitos': exitos,
-            'Fracaso': self.__ctd_simulaciones - exitos,
-            'Probabilidad_exito': probabilidad_exito,
-            'Tiempo_promedio': tiempo_promedio
-        }
+        return self.estadisticas()
 
     
     def martingala_inversa_hasta_objetivo(self, tipo_apuesta: str, valor_apuesta, monto_inicial: float, factor_objetivo: float):
@@ -167,16 +152,17 @@ class SimulacionesMontecarloRuleta:
         
         self.__resultados.clear()
         self.__historiales.clear()
+        self.__historial_tiempo.clear()
+        self.__exitos = 0
         
         saldo_objetivo = self.__jugador_original.saldo * factor_objetivo
-        historial_tiempo = []
-        exitos = 0  # contar cuántas veces se alcanza el objetivo
     
         for simulacion in range(self.__ctd_simulaciones):
             ruleta = Ruleta()
             jugador = JugadorRuleta(self.__jugador_original.nombre, self.__jugador_original.saldo)
             monto = monto_inicial
             historial = [jugador.saldo]
+            
             tiempo = 0
     
             while 0 < jugador.saldo < saldo_objetivo:
@@ -196,24 +182,31 @@ class SimulacionesMontecarloRuleta:
                 tiempo += 1
     
             if jugador.saldo >= saldo_objetivo:
-                exitos += 1
+                self.__exitos += 1
     
             self.__historiales.append(historial)
             self.__resultados.append(jugador.saldo)
-            historial_tiempo.append(tiempo)
-    
-        probabilidad_exito = exitos / self.__ctd_simulaciones
+            self.__historial_tiempo.append(tiempo)    
         
-        tiempo_promedio = sum(historial_tiempo)/self.__ctd_simulaciones
+        return self.estadisticas()
         
+        
+
+
+
+    def estadisticas(self):
+        ''' Retorna resumen estadístico de las simulaciones. '''
         return {
-            'Éxitos': exitos,
-            'Fracaso': self.__ctd_simulaciones - exitos,
-            'Probabilidad_exito': probabilidad_exito,
-            'Tiempo_promedio': tiempo_promedio
+            'Éxitos': self.__exitos,
+            'Fracasos': self.__ctd_simulaciones - self.__exitos,
+            'Probabilidad_éxito': self.__exitos / self.__ctd_simulaciones,
+            'Promedio_capital_final': np.mean(self.__resultados),
+            'desviacion_std': np.std(self.__resultados),
+            'Máximo': max(self.__resultados),
+            'Mínimo': min(self.__resultados),
+            'Tiempo_promedio': np.mean(self.__historial_tiempo)
         }
     
-
     
     
     def trayectorias(self):
@@ -234,6 +227,7 @@ class SimulacionesMontecarloRuleta:
         plt.ylabel('Saldo')
         plt.grid(True)
         plt.show()
+        
     
     def graficar_probabilidad(self, factor_objetivo: float, particiones: list):
         '''Grafica la evolución de la probabilidad de terminar con el capital por un factor objetivo según distintas particiones.'''
@@ -258,12 +252,5 @@ class SimulacionesMontecarloRuleta:
         plt.grid(axis='y')
         plt.tight_layout()
         plt.show()
+        
     
-jugador = JugadorRuleta(nombre = "Venegas", saldo_inicial = 100)
-sim = SimulacionesMontecarloRuleta(jugador, 100000, 3)
-#sim.simular_martingala('paridad', 'par', 1000)
-#sim.simular_martingala_hasta_objetivo('paridad', 'par', 10, 2)
-sim.martingala('paridad', 'par', 10)
-#sim.graficar_probabilidad(2, [10, 100, 1000, 10_000])
-sim.estadisticas()
-#sim.trayectorias()
