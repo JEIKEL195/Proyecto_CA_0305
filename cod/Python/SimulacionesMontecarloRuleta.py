@@ -299,6 +299,61 @@ class SimulacionesMontecarloRuleta:
             self.__historial_tiempo.append(tiempo)
     
         return self.estadisticas()
+    
+    
+    def uno_tres_dos_seis_hasta_objetivo(self, tipo_apuesta: str, valor_apuesta, monto_base: float, factor_objetivo: float):
+        '''Estrategia 1-3-2-6: secuencia positiva de apuestas basada en racha ganadora.'''
+        
+        self.__resultados.clear()
+        self.__historiales.clear()
+        self.__historial_tiempo.clear()
+        self.__exitos = 0
+        
+        secuencia = [1, 3, 2, 6]  # múltiplos del monto_base
+    
+        for _ in range(self.__ctd_simulaciones):
+            ruleta = Ruleta()
+            jugador = JugadorRuleta(self.__jugador_original.nombre, self.__jugador_original.saldo)
+            saldo_inicial = jugador.saldo
+            saldo_objetivo = factor_objetivo * saldo_inicial
+            historial = [jugador.saldo]
+            paso = 0
+            
+            tiempo = 0
+    
+            while jugador.saldo >= monto_base and jugador.saldo < saldo_objetivo:
+                monto = secuencia[paso] * monto_base
+                if monto > jugador.saldo:
+                    break
+    
+                jugador.hacer_apuesta(tipo_apuesta, valor_apuesta, monto)
+                saldo_antes = jugador.saldo
+                resultado = ruleta.girar()
+                jugador.actualizar_saldo(resultado)
+                saldo_despues = jugador.saldo
+    
+                ganancia = saldo_despues - saldo_antes
+    
+                if ganancia > 0:
+                    paso += 1
+                    if paso >= len(secuencia):
+                        paso = 0  # completó la secuencia
+                else:
+                    paso = 0  # reinicia secuencia tras perder
+    
+                historial.append(jugador.saldo)
+                
+                tiempo += 1
+                
+            if(jugador.saldo >= saldo_objetivo):
+                self.__exitos += 1
+    
+            self.__resultados.append(jugador.saldo)
+            self.__historiales.append(historial)
+            self.__historial_tiempo.append(tiempo)
+            
+        return self.estadisticas()
+
 
 
     def estadisticas(self):
@@ -402,3 +457,22 @@ class SimulacionesMontecarloRuleta:
         plt.legend()
         plt.tight_layout()
         plt.show()
+
+    
+jugador = JugadorRuleta(nombre = "Venegas", saldo_inicial = 100)
+sim = SimulacionesMontecarloRuleta(jugador, 10000, 3)
+#sim.simular_martingala('paridad', 'par', 1000)
+#sim.martingala_hasta_objetivo('paridad', 'par', 1, 1.2)
+#sim.martingala_inversa_hasta_objetivo('paridad', 'par', 10, 1.5)
+#sim.fibonacci_hasta_objetivo('paridad', 'par', 10, 1.1)
+#sim.oscars_grind_hasta_objetivo('paridad', 'par', 10, 2)
+
+sim.uno_tres_dos_seis_hasta_objetivo('paridad', 'par', 1, 1.2)
+
+
+#sim.comparar_estrategias('paridad', 'par', 10, [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2])
+
+
+#sim.graficar_probabilidad(2, [10, 100, 1000, 10_000])
+#sim.estadisticas()
+
