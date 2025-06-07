@@ -191,7 +191,60 @@ class SimulacionesMontecarloRuleta:
         return self.estadisticas()
         
         
+    def fibonacci_hasta_objetivo(self, tipo_apuesta: str, valor_apuesta, monto_base: float, factor_objetivo: float):
+        '''Simula la estrategia Fibonacci hasta alcanzar el objetivo de capital o quedarse sin saldo.'''
+    
+        self.__resultados.clear()
+        self.__historiales.clear()
+        self.__historial_tiempo.clear()
+        self.__exitos = 0
+        
+        saldo_objetivo = self.__jugador_original.saldo * factor_objetivo
+    
 
+    
+        for _ in range(self.__ctd_simulaciones):
+            ruleta = Ruleta()
+            jugador = JugadorRuleta(self.__jugador_original.nombre, self.__jugador_original.saldo)
+            historial = [jugador.saldo]
+    
+            secuencia = [1, 1] # Secuencia Fibonacci
+            indice = 0  # Punto actual de la secuencia
+            
+            tiempo = 0
+    
+            while 0 < jugador.saldo < saldo_objetivo:
+                apuesta_actual = secuencia[indice] * monto_base
+    
+                if(apuesta_actual > jugador.saldo):
+                    break  # no puede apostar más
+    
+                jugador.hacer_apuesta(tipo_apuesta, valor_apuesta, apuesta_actual)
+                resultado = ruleta.girar()
+                ganador = jugador.actualizar_saldo(resultado)
+                historial.append(jugador.saldo)
+    
+                if(ganador > 0):
+                    if(indice >= 2):
+                        indice -= 2
+                    else:
+                        indice = 0
+                else:
+                    indice += 1
+
+                    if(indice >= len(secuencia)):
+                        secuencia.append(secuencia[-1] + secuencia[-2])
+                        
+                tiempo +=1
+    
+            if(jugador.saldo >= saldo_objetivo):
+                self.__exitos += 1
+    
+            self.__historiales.append(historial)
+            self.__resultados.append(jugador.saldo)
+            self.__historial_tiempo.append(tiempo)
+    
+        return self.estadisticas()
 
 
     def estadisticas(self):
@@ -253,4 +306,5 @@ class SimulacionesMontecarloRuleta:
         plt.tight_layout()
         plt.show()
         
-    
+        
+ 
