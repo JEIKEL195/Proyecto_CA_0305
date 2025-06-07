@@ -145,40 +145,61 @@ class ApuestaRuleta:
         '''
         numero, color, paridad = resultado
 
-        if (self.__tipo == 'numero') and (self.__valor == numero):
+        if((self.__tipo == 'numero') and (self.__valor == numero)):
             return self.__monto * 35
         
-        elif (self.__tipo == 'color') and (self.__valor == color):
+        elif((self.__tipo == 'color') and (self.__valor == color)):
             return self.__monto * 1
         
-        elif (self.__tipo == 'paridad') and (self.__valor == paridad):
-            return self.monto * 1
+        elif((self.__tipo == 'paridad') and (self.__valor == paridad)):
+            return self.__monto * 1
         
-        elif (self.__tipo == 'alto_bajo'):
+        elif((self.__tipo == 'alto_bajo')):
             
-            if (numero == 0):
+            if(numero == 0):
                 return 0
             
             parte = 'bajo' if 0 < numero < 19 else 'alto'
             
-            if (self.__valor == parte):
+            if(self.__valor == parte):
                 return self.__monto * 1
             
-        elif (self.__tipo == 'docena'):
+        elif(self.__tipo == 'docena'):
             
-            if (numero == 0):
+            if(numero == 0):
                 return 0
             
-            if ((self.__valor == 1) and (1 <= numero <= 12)):
-                return self.monto * 2
-            
-            elif ((self.__valor == 2) and (13 <= numero <= 24)):
-                return self.monto * 2
-            
-            elif ((self.__valor == 3) and (25 <= numero <= 36)):
+            if((self.__valor == 1) and (1 <= numero <= 12)):
                 return self.__monto * 2
             
-        elif (self.__tipo == 'columna'):
+            elif((self.__valor == 2) and (13 <= numero <= 24)):
+                return self.__monto * 2
+            
+            elif((self.__valor == 3) and (25 <= numero <= 36)):
+                return self.__monto * 2
+            
+            
+        elif(self.__tipo == 'seisena'):
+            
+            if((self.__valor == 1) and (1 <= numero <= 6)):
+                return self.__monto * 5
+            
+            elif((self.__valor == 2) and (6 < numero <= 12)):
+                return self.__monto * 5
+            
+            elif((self.__valor == 3) and (12 < numero <= 18)):
+                return self.__monto * 5
+            
+            elif((self.__valor == 4) and (18 < numero <= 24)):
+                return self.__monto * 5
+            
+            elif((self.__valor == 5) and (24 < numero <= 30)):
+                return self.__monto * 5
+            
+            elif((self.__valor == 6) and (30 < numero <= 36)):
+                return self.__monto * 5
+            
+        elif(self.__tipo == 'columna'):
             
             if (numero == 0):
                 return 0
