@@ -147,7 +147,7 @@ class SimulacionesMontecarloRuleta:
         return self.estadisticas()
 
     
-    def martingala_inversa_hasta_objetivo(self, tipo_apuesta: str, valor_apuesta, monto_inicial: float, factor_objetivo: float):
+    def paroli_hasta_objetivo(self, tipo_apuesta: str, valor_apuesta, monto_inicial: float, factor_objetivo: float):
         '''Simula la estrategia Martingala hasta alcanzar el objetivo de capital o quedar sin saldo.'''
         
         self.__resultados.clear()
@@ -434,6 +434,58 @@ class SimulacionesMontecarloRuleta:
             
         return self.estadisticas()
 
+    
+    def dalembert_hasta_objetivo(self, tipo_apuesta: str, valor_apuesta, monto_base: float, factor_objetivo: float):
+        '''
+        Estrategia D’Alembert: aumenta 1 unidad tras perder, disminuye 1 tras ganar. Se detiene al alcanzar el factor objetivo.
+        
+        Parámetros:
+        -----------
+        tipo_apuesta: str – tipo de apuesta (e.g. 'paridad')
+        valor_apuesta: valor apostado (e.g. 'par')
+        monto_base: float – monto base de la apuesta
+        factor_objetivo: float – objetivo de ganancia (e.g. 1.5 para 50% de ganancia)
+        '''
+        
+        self.__resultados.clear()
+        self.__historiales.clear()
+        self.__historial_tiempo.clear()
+        self.__exitos = 0
+        
+        for _ in range(self.__ctd_simulaciones):
+            ruleta = Ruleta()
+            jugador = JugadorRuleta(self.__jugador_original.nombre, self.__jugador_original.saldo)
+            
+            saldo_objetivo = factor_objetivo * jugador.saldo
+            monto_actual = monto_base
+            historial = [jugador.saldo]
+            
+            tiempo = 0
+    
+            while (jugador.saldo >= monto_actual) and (jugador.saldo < saldo_objetivo):
+                jugador.hacer_apuesta(tipo_apuesta, valor_apuesta, monto_actual)
+                resultado = ruleta.girar()
+                saldo_antes = jugador.saldo
+                jugador.actualizar_saldo(resultado)
+                ganancia = jugador.saldo - saldo_antes
+    
+                if(ganancia > 0):
+                    monto_actual = max(monto_actual - monto_base, monto_base)
+                else:
+                    monto_actual += monto_base
+                    
+                historial.append(jugador.saldo)
+                
+                tiempo += 1
+    
+            if(jugador.saldo >= saldo_objetivo):
+                self.__exitos += 1
+    
+            self.__resultados.append(jugador.saldo)
+            self.__historiales.append(historial)
+            self.__historial_tiempo.append(tiempo)
+            
+        return self.estadisticas()
 
 
 
@@ -508,6 +560,11 @@ class SimulacionesMontecarloRuleta:
     
         resultados1 = []
         resultados2 = []
+        resultados3 = []
+        resultados4 = []
+        resultados5 = []
+        resultados6 = []
+        resultados7 = []
     
         for factor in factores_objetivo:
             
@@ -522,15 +579,62 @@ class SimulacionesMontecarloRuleta:
             self.__resultados.clear()
             self.__historiales.clear()
     
-            self.fibonacci_hasta_objetivo(tipo_apuesta, valor_apuesta, monto, factor)
+            self.paroli_hasta_objetivo(tipo_apuesta, valor_apuesta, monto, factor)
             exitos2 = sum(1 for saldo in self.__resultados
                           if saldo >= factor * self.__jugador_original.saldo)
             resultados2.append(exitos2 / len(self.__resultados))
+            
+            self.__resultados.clear()
+            self.__historiales.clear()
+            
+            self.fibonacci_hasta_objetivo(tipo_apuesta, valor_apuesta, monto, factor)
+            exitos3 = sum(1 for saldo in self.__resultados
+                          if saldo >= factor * self.__jugador_original.saldo)
+            resultados3.append(exitos3 / len(self.__resultados))
+            
+            self.__resultados.clear()
+            self.__historiales.clear()
+            
+            self.oscars_grind_hasta_objetivo(tipo_apuesta, valor_apuesta, monto, factor)
+            exitos4 = sum(1 for saldo in self.__resultados
+                          if saldo >= factor * self.__jugador_original.saldo)
+            resultados4.append(exitos4 / len(self.__resultados))
+            
+            self.__resultados.clear()
+            self.__historiales.clear()
+            
+            self.uno_tres_dos_seis_hasta_objetivo(tipo_apuesta, valor_apuesta, monto, factor)
+            exitos5 = sum(1 for saldo in self.__resultados
+                          if saldo >= factor * self.__jugador_original.saldo)
+            resultados5.append(exitos5 / len(self.__resultados))
+            
+            self.__resultados.clear()
+            self.__historiales.clear()
+            
+            self.apuesta_fija_hasta_objetivo(monto, factor)
+            exitos6 = sum(1 for saldo in self.__resultados
+                          if saldo >= factor * self.__jugador_original.saldo)
+            resultados6.append(exitos6 / len(self.__resultados))
+            
+            self.__resultados.clear()
+            self.__historiales.clear()
+            
+            self.dalembert_hasta_objetivo(tipo_apuesta, valor_apuesta, monto, factor)
+            exitos7 = sum(1 for saldo in self.__resultados
+                          if saldo >= factor * self.__jugador_original.saldo)
+            resultados7.append(exitos7 / len(self.__resultados))
+            
+            
     
 
         plt.plot(factores_objetivo, resultados1, label = "Martingala", marker='o')
-        plt.plot(factores_objetivo, resultados2, label = "Fibonacci", marker='s')
-        plt.xlabel("Factor objetivo (veces el capital)")
+        plt.plot(factores_objetivo, resultados2, label = "Paroli", marker='o')
+        plt.plot(factores_objetivo, resultados3, label = "Fibonacci", marker='o')
+        plt.plot(factores_objetivo, resultados4, label = "Oscar's Grind", marker='o')
+        plt.plot(factores_objetivo, resultados5, label = "1-3-2-6", marker='o')
+        plt.plot(factores_objetivo, resultados6, label = "Apuesta Fija", marker='o')
+        plt.plot(factores_objetivo, resultados7, label = "D'Alember", marker='o')
+        plt.xlabel("Factor objetivo")
         plt.ylabel("Probabilidad de éxito")
         plt.title("Comparación de estrategias de ruleta")
         plt.grid(True)
@@ -541,19 +645,19 @@ class SimulacionesMontecarloRuleta:
 
     
 jugador = JugadorRuleta(nombre = "Venegas", saldo_inicial = 200)
-sim = SimulacionesMontecarloRuleta(jugador, 1_000, 3)
+sim = SimulacionesMontecarloRuleta(jugador, 10, 3)
 #sim.simular_martingala('paridad', 'par', 1000)
 #sim.martingala_hasta_objetivo('paridad', 'par', 1, 1.2)
 #sim.martingala_inversa_hasta_objetivo('paridad', 'par', 10, 1.5)
 #sim.fibonacci_hasta_objetivo('paridad', 'par', 10, 1.1)
 #sim.oscars_grind_hasta_objetivo('paridad', 'par', 10, 2)
-
+sim.dalembert_hasta_objetivo('paridad', 'par', 10, 1.5)
 #sim.uno_tres_dos_seis_hasta_objetivo('paridad', 'par', 1, 1.2)
 
 #sim.james_bond_hasta_objetivo(1, 2)
 #sim.apuesta_fija_hasta_objetivo(10, 1.2)
 
-#sim.comparar_estrategias('paridad', 'par', 10, [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2])
+sim.comparar_estrategias('paridad', 'par', 10, [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2])
 
 
 #sim.graficar_probabilidad(2, [10, 100, 1000, 10_000])
