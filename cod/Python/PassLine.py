@@ -60,6 +60,10 @@ class PassLine():
     def riqueza(self, nueva_riqueza):
         self.__riqueza = nueva_riqueza
     
+    @punto.setter
+    def punto(self, nuevo_punto):
+        self.__riqueza = nuevo_punto
+    
     @numero_apuestas.setter
     def numero_apuestas(self, nuevo_numero_apuestas):
         self.__numero_apuestas = nuevo_numero_apuestas
