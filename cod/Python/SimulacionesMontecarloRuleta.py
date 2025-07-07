@@ -2,7 +2,7 @@
 """
 Created on Thu Jun  5 05:58:46 2025
 
-@author: jeike
+@authors: Jeikel Navarro; Cristofer Urrutia; Erick Venegas
 """
 
 from JugadorRuleta import JugadorRuleta
@@ -32,7 +32,21 @@ class SimulacionesMontecarloRuleta:
         self.__historial_tiempo = []
         self.__exitos = 0
 
+
     def simular(self, tipo_apuesta: str, valor_apuesta, monto: float):
+        ''' Ejecuta simulaciones apostando un único tipo de apuesta fija por jugada.
+
+        Parámetros
+        ----------
+        tipo_apuesta (str): Tipo de apuesta realizada en cada jugada.
+        valor_apuesta: Valor específico de la apuesta (por ejemplo, número, color, etc.).
+        monto (float): Monto apostado en cada jugada.
+        
+        Retorna
+        -------
+        resultados (list): Lista con los saldos finales del jugador en cada simulación.
+        
+        '''
         for simulacion in range(self.__ctd_simulaciones):
             ruleta = Ruleta()
             jugador = JugadorRuleta(self.__jugador_original.nombre, self.__jugador_original.saldo)
@@ -50,9 +64,19 @@ class SimulacionesMontecarloRuleta:
             
         return self.__resultados
     
+    
     def simular_varias_apuestas(self, apuestas: list, num_jugadas: int):
-        ''' Ejecuta una simulación con distintas apuestas.
-
+        ''' Ejecuta simulaciones con múltiples apuestas simultáneas en cada jugada.
+    
+        Parámetros
+        ----------
+        apuestas (list): Lista que contiene (tipo, valor, monto) para cada apuesta.
+        num_jugadas (int): Número de jugadas a realizar por simulación.
+    
+        Retorna
+        -------
+        resultados (list): Saldos finales del jugador por simulación.
+        
         '''
         monto_total = sum(monto for _, _, monto in apuestas)
         
@@ -75,7 +99,21 @@ class SimulacionesMontecarloRuleta:
         
         return self.__resultados
     
+    
     def martingala(self, tipo_apuesta, valor_apuesta, monto_inicial):
+        ''' Aplica la estrategia Martingala durante las simulaciones.
+
+        Parámetros
+        ----------
+        tipo_apuesta (str): Tipo de apuesta usada.
+        valor_apuesta: Valor sobre el cual se apuesta.
+        monto_inicial (float): Monto inicial de la apuesta.
+        
+        Retorna
+        -------
+        resultados (list): Lista de saldos finales por simulación.
+        
+        '''
         self.__resultados.clear()
         self.__historiales.clear()
         
@@ -104,8 +142,20 @@ class SimulacionesMontecarloRuleta:
         return self.__resultados
     
     def martingala_hasta_objetivo(self, tipo_apuesta: str, valor_apuesta, monto_inicial: float, factor_objetivo: float):
-        '''Simula la estrategia Martingala hasta alcanzar el objetivo de capital o quedar sin saldo.'''
+        ''' Simula la estrategia Martingala hasta alcanzar el saldo objetivo o perder todo.
+    
+        Parámetros
+        ----------
+        tipo_apuesta (str): Tipo de apuesta.
+        valor_apuesta: Valor apostado.
+        monto_inicial (float): Monto inicial de la apuesta.
+        factor_objetivo (float): Multiplicador del saldo inicial para definir el objetivo.
+    
+        Retorna
+        -------
+        (dict): Estadísticas resumidas de las simulaciones.
         
+        '''
         self.__resultados.clear()
         self.__historiales.clear()
         self.__historial_tiempo.clear()
@@ -148,8 +198,20 @@ class SimulacionesMontecarloRuleta:
 
     
     def paroli_hasta_objetivo(self, tipo_apuesta: str, valor_apuesta, monto_inicial: float, factor_objetivo: float):
-        '''Simula la estrategia Martingala hasta alcanzar el objetivo de capital o quedar sin saldo.'''
+        ''' Aplica la estrategia Paroli con objetivo de saldo. Es decir, duplica la apuesta después de ganar, reinicia tras perder.
+    
+        Parámetros        
+        ----------
+        tipo_apuesta (str): Tipo de apuesta.
+        valor_apuesta: Valor apostado.
+        monto_inicial (float): Monto inicial de la apuesta.
+        factor_objetivo (float): Multiplicador del saldo inicial para definir el objetivo.
+    
+        Retorna
+        -------
+        (dict): Estadísticas resumidas de las simulaciones.
         
+        '''
         self.__resultados.clear()
         self.__historiales.clear()
         self.__historial_tiempo.clear()
@@ -192,8 +254,20 @@ class SimulacionesMontecarloRuleta:
         
         
     def fibonacci_hasta_objetivo(self, tipo_apuesta: str, valor_apuesta, monto_inicial: float, factor_objetivo: float):
-        '''Simula la estrategia Fibonacci hasta alcanzar el objetivo de capital o quedarse sin saldo.'''
-    
+        ''' Aplica la estrategia de apuestas basada en la secuencia de Fibonacci hasta alcanzar el objetivo de capital o quedarse sin saldo.
+
+        Parámetros
+        ----------
+        tipo_apuesta (str): Tipo de apuesta.
+        valor_apuesta: Valor apostado.
+        monto_inicial (float): Monto inicial de la apuesta.
+        factor_objetivo (float): Multiplicador del saldo inicial para definir el objetivo.
+
+        Retorna
+        -------
+        (dict): Estadísticas resumidas de las simulaciones.
+        
+        '''
         self.__resultados.clear()
         self.__historiales.clear()
         self.__historial_tiempo.clear()
@@ -248,8 +322,20 @@ class SimulacionesMontecarloRuleta:
     
     
     def oscars_grind_hasta_objetivo(self, tipo_apuesta: str, valor_apuesta, monto_inicial: float, factor_objetivo: float):
-        '''Estrategia Oscar's Grind: progresa moderadamente hasta alcanzar el objetivo.'''
+        '''Estrategia Oscar's Grind: progresa moderadamente hasta alcanzar el objetivo. Es decir, incrementa apuesta en caso de ganancia parcial y mantiene en pérdida.
+    
+        Parámetros
+        ----------
+        tipo_apuesta (str): Tipo de apuesta.
+        valor_apuesta: Valor apostado.
+        monto_inicial (float): Monto inicial de la apuesta.
+        factor_objetivo (float): Multiplicador del saldo inicial para definir el objetivo.
+    
+        Retorna
+        -------
+        (dict): Estadísticas resumidas de las simulaciones.
         
+        '''
         self.__resultados.clear()
         self.__historiales.clear()
         self.__historial_tiempo.clear()
@@ -301,15 +387,27 @@ class SimulacionesMontecarloRuleta:
         return self.estadisticas()
     
     
-    def uno_tres_dos_seis_hasta_objetivo(self, tipo_apuesta: str, valor_apuesta, monto_base: float, factor_objetivo: float):
-        '''Estrategia 1-3-2-6: secuencia positiva de apuestas basada en racha ganadora.'''
+    def uno_tres_dos_seis_hasta_objetivo(self, tipo_apuesta: str, valor_apuesta, monto_inicial: float, factor_objetivo: float):
+        '''Estrategia 1-3-2-6: secuencia positiva de apuestas basada en racha ganadora.
         
+        Parámetros
+        ----------
+        tipo_apuesta (str): Tipo de apuesta.
+        valor_apuesta: Valor apostado.
+        monto_inicial (float): Monto inicial de la apuesta.
+        factor_objetivo (float): Multiplicador del saldo inicial para definir el objetivo.
+    
+        Retorna
+        -------
+        (dict): Estadísticas resumidas de las simulaciones.
+        
+        '''
         self.__resultados.clear()
         self.__historiales.clear()
         self.__historial_tiempo.clear()
         self.__exitos = 0
         
-        secuencia = [1, 3, 2, 6]  # múltiplos del monto_base
+        secuencia = [1, 3, 2, 6]  # múltiplos del monto_inicial
     
         for _ in range(self.__ctd_simulaciones):
             ruleta = Ruleta()
@@ -321,8 +419,8 @@ class SimulacionesMontecarloRuleta:
             
             tiempo = 0
     
-            while jugador.saldo >= monto_base and jugador.saldo < saldo_objetivo:
-                monto = secuencia[paso] * monto_base
+            while jugador.saldo >= monto_inicial and jugador.saldo < saldo_objetivo:
+                monto = secuencia[paso] * monto_inicial
                 if monto > jugador.saldo:
                     break
     
@@ -355,15 +453,25 @@ class SimulacionesMontecarloRuleta:
         return self.estadisticas()
     
     
-    def james_bond_hasta_objetivo(self, monto_base: float, factor_objetivo: float):
-        '''Estrategia James Bond generalizada hasta alcanzar un objetivo de saldo.'''
+    def james_bond_hasta_objetivo(self, monto_inicial: float, factor_objetivo: float):
+        '''Estrategia James Bond generalizada hasta alcanzar un objetivo de saldo.
         
+        Parámetros
+        ----------
+        monto_inicial (float): Monto inicial de la apuesta.
+        factor_objetivo (float): Multiplicador del saldo inicial para definir el objetivo.
+    
+        Retorna
+        -------
+        (dict): Estadísticas resumidas de las simulaciones.
+        
+        '''
         self.__resultados.clear()
         self.__historiales.clear()
         self.__historial_tiempo.clear()
         self.__exitos = 0
         
-        total_apuesta = 200 * monto_base  # Escalable
+        total_apuesta = 200 * monto_inicial  # Escalable
     
         for _ in range(self.__ctd_simulaciones):
             ruleta = Ruleta()
@@ -400,7 +508,20 @@ class SimulacionesMontecarloRuleta:
     
     
     def apuesta_fija_hasta_objetivo(self, monto_inicial: float, factor_objetivo: float):
-        '''Estrategia apuesta fija hasta alcanzar un objetivo de saldo.'''
+        '''Estrategia apuesta fija hasta alcanzar un objetivo de saldo.
+        
+        Parámetros
+        ----------
+        tipo_apuesta (str): Tipo de apuesta.
+        valor_apuesta: Valor apostado.
+        monto_inicial (float): Monto inicial de la apuesta.
+        factor_objetivo (float): Multiplicador del saldo inicial para definir el objetivo.
+    
+        Retorna
+        -------
+        (dict): Estadísticas resumidas de las simulaciones.
+        
+        '''
         
         self.__resultados.clear()
         self.__historiales.clear()
@@ -436,15 +557,19 @@ class SimulacionesMontecarloRuleta:
 
     
     def dalembert_hasta_objetivo(self, tipo_apuesta: str, valor_apuesta, monto_base: float, factor_objetivo: float):
-        '''
-        Estrategia D’Alembert: aumenta 1 unidad tras perder, disminuye 1 tras ganar. Se detiene al alcanzar el factor objetivo.
+        ''' Estrategia D’Alembert: aumenta 1 unidad tras perder, disminuye 1 tras ganar. Se detiene al alcanzar el factor objetivo.
+    
+        Parámetros
+        ----------
+        tipo_apuesta (str): Tipo de apuesta.
+        valor_apuesta: Valor apostado.
+        monto_inicial (float): Monto inicial de la apuesta.
+        factor_objetivo (float): Multiplicador del saldo inicial para definir el objetivo.
+    
+        Retorna
+        -------
+        (dict): Estadísticas resumidas de las simulaciones.
         
-        Parámetros:
-        -----------
-        tipo_apuesta: str – tipo de apuesta (e.g. 'paridad')
-        valor_apuesta: valor apostado (e.g. 'par')
-        monto_base: float – monto base de la apuesta
-        factor_objetivo: float – objetivo de ganancia (e.g. 1.5 para 50% de ganancia)
         '''
         
         self.__resultados.clear()
@@ -490,7 +615,17 @@ class SimulacionesMontecarloRuleta:
 
 
     def estadisticas(self):
-        ''' Retorna resumen estadístico de las simulaciones. '''
+        ''' Genera estadísticas descriptivas del desempeño de las simulaciones.
+        
+        Parámetros
+        ----------
+        None
+        
+        Retorna
+        -------
+        (dict): Diccionario con: tasa de éxito, IC 95%, media, desviación, máx, mín y tiempo promedio.
+        
+        '''
         prob = self.__exitos / self.__ctd_simulaciones
         simulaciones = self.__ctd_simulaciones
         
@@ -511,13 +646,12 @@ class SimulacionesMontecarloRuleta:
     
     
     def trayectorias(self):
-        ''' Grafica distintas trayectorias del juego de ruleta.
+    ''' Grafica la evolución del saldo del jugador en cada simulación.
 
-        Retorna
-        -------
-        None 
-        
-        '''
+    Retorna
+    -------
+    None
+    '''
         for trayectoria in self.__historiales:
             x = list(range(len(trayectoria)))
             #plt.scatter(x, trayectoria, s=3)
@@ -644,23 +778,24 @@ class SimulacionesMontecarloRuleta:
         plt.show()
 
     
-jugador = JugadorRuleta(nombre = "Venegas", saldo_inicial = 200)
-sim = SimulacionesMontecarloRuleta(jugador, 10, 3)
-#sim.simular_martingala('paridad', 'par', 1000)
-#sim.martingala_hasta_objetivo('paridad', 'par', 1, 1.2)
+jugador = JugadorRuleta(nombre = "Venegas", saldo_inicial = 150)
+sim = SimulacionesMontecarloRuleta(jugador, 10, 1)
+#sim.simular('docena', 2, 10)
+#sim.martingala_hasta_objetivo('paridad', 'par', 2, 1.5)
 #sim.martingala_inversa_hasta_objetivo('paridad', 'par', 10, 1.5)
-#sim.fibonacci_hasta_objetivo('paridad', 'par', 10, 1.1)
+sim.fibonacci_hasta_objetivo('paridad', 'par', 2, 1.5)
 #sim.oscars_grind_hasta_objetivo('paridad', 'par', 10, 2)
-sim.dalembert_hasta_objetivo('paridad', 'par', 10, 1.5)
+#sim.dalembert_hasta_objetivo('paridad', 'par', 10, 1.5)
 #sim.uno_tres_dos_seis_hasta_objetivo('paridad', 'par', 1, 1.2)
 
 #sim.james_bond_hasta_objetivo(1, 2)
 #sim.apuesta_fija_hasta_objetivo(10, 1.2)
 
-sim.comparar_estrategias('paridad', 'par', 10, [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2])
+#sim.comparar_estrategias('paridad', 'par', 4, [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2, 3])
 
 
 #sim.graficar_probabilidad(2, [10, 100, 1000, 10_000])
+sim.trayectorias()
 #sim.estadisticas()
 
 
