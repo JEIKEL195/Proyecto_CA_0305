@@ -23,6 +23,7 @@ class PassLine():
         ----------
         None
         '''
+        super().__init__()
         self.__sumas_ganadoras = [7, 11]
         self.__sumas_perdedoras = [2, 3, 12]
         self.__sumas_punto = [4, 5, 6, 8, 9, 10]
@@ -335,7 +336,7 @@ class PassLine():
                 self.__riqueza.append(self.__riqueza[self.__numero_apuestas-1]*(1 - porcentaje_apuesta - porcentaje_odds))
                 return 'Sacaste 7 antes que el punto, perdiste'
                 
-    def graficar_riqueza(self):
+    def graficar_riqueza(self, porcentaje_apuesta):
         '''
         Grafica la evolución de la riqueza del jugador a lo largo de las apuestas.
 
@@ -345,8 +346,8 @@ class PassLine():
         '''
         apuestas = range(self.__numero_apuestas + 1)
 
-        plt.plot(apuestas, self.__riqueza, linestyle=':', color='#C0392B', linewidth=1)
-
+        plt.plot(apuestas, self.__riqueza, linestyle = ':', color = '#C0392B', linewidth = 1)
+        
         for i in range(1, len(self.__riqueza)):
             color = 'green' if self.__riqueza[i] > self.__riqueza[i - 1] else 'red'
             plt.plot(apuestas[i], self.__riqueza[i], 
@@ -355,12 +356,20 @@ class PassLine():
              markerfacecolor=color, 
              markeredgecolor='black',
              markeredgewidth=1)
-
+        
+        plt.axhline(
+        y = self.capital_esperado(porcentaje_apuesta, self.__numero_apuestas),
+        color='y',
+        linestyle='--',
+        label=f'Capital esperado tras {self.__numero_apuestas} apuestas: {self.capital_esperado(porcentaje_apuesta, self.__numero_apuestas):.2f}'
+        )   
+        
         plt.xlabel('Número de apuestas')
         plt.ylabel('Riqueza')
         plt.title('Evolución de la Riqueza en el Tiempo')
         plt.grid(True)
         plt.tight_layout()
+        plt.legend()
         plt.show()
     
     def capital_esperado(self, porcentaje_fijo, num_apuestas):
@@ -379,61 +388,74 @@ class PassLine():
         float
             Valor esperado del capital al final del proceso.
         '''
-        return self.__riqueza[0] *( (1-porcentaje_fijo*0.0141)^(num_apuestas) )
-
-
+        return self.__riqueza[0] *( (1 - porcentaje_fijo * 0.0141) ** (num_apuestas) )
+    
 apuesta1 = PassLine()
 apuesta1.dinero_apuesta(1000)
-apuesta1.pass_line(0.7, 0)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.pass_line(0.05, 0.1)
-apuesta1.graficar_riqueza()
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+apuesta1.pass_line(0, 0.1)
+
+apuesta1.graficar_riqueza(0.1)
+

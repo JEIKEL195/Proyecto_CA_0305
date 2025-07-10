@@ -185,6 +185,16 @@ class DontPassLine():
         '''
         return f'Para ganar en el Come Out Roll, tu suma debe estar en: \n{self.__sumas_ganadoras} \nPara perder en el Come Out Roll, tu suma debe estar en: \n{self.__sumas_perdedoras} \nEmpatas si tu suma es igual a {self.__suma_empate} \nSi sacas otra suma, entras al punto: \nGanas si tu suma es igual a 7 y sale antes que el punto. \nSi sacas el punto primero pierdes'    
     
+    def dinero_apuesta(self, dinero_apuesta):
+        '''
+        Agrega una cantidad de dinero inicial o apostada a la lista de riqueza.
+
+        Parámetros
+        ----------
+        dinero_apuesta : float
+            Valor de la apuesta inicial o monto a registrar.
+        '''
+        self.__riqueza.append(dinero_apuesta)
     
     def lanzar_dados(self):
         '''
@@ -250,11 +260,11 @@ class DontPassLine():
         
         suma_dados = self.lanzar_dados()
         
-        if suma_dados in self.__suma_perdedora:
+        if suma_dados in self.__sumas_perdedoras:
             self.__riqueza.append(self.__riqueza[self.__numero_apuestas - 1]*(1 - porcentaje_apuesta))
             return 'Perdiste en el Come Out Roll'
         
-        elif suma_dados in self.__suma_ganadora:
+        elif suma_dados in self.__sumas_ganadoras:
             self.__riqueza.append(self.__riqueza[self.__numero_apuestas - 1]*(1 + porcentaje_apuesta))
             return 'Ganaste en el Come Out Roll'
         
@@ -303,6 +313,43 @@ class DontPassLine():
         plt.grid(True)
         plt.tight_layout()
         plt.show()
+        
+
+xd = DontPassLine()
+xd.dinero_apuesta(1000)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.dont_pass_line(0.1)
+xd.graficar_riqueza()
 
 
 

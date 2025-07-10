@@ -51,7 +51,7 @@ class GeneradorAleatorio:
         '''
         return self.__rng.integers(minimo, maximo + 1)
     
-    def vector_enteros(self, minimo: int, maximo: int, simulaciones):
+    def vector_enteros(self, minimo: int, maximo: int, simulaciones: int):
         ''' Genera un vector de números enteros aleatorios en el intervalo [minimo, maximo].
 
         Parámetros
@@ -67,7 +67,7 @@ class GeneradorAleatorio:
         '''
         return self.__rng.integers(minimo, maximo + 1, size=simulaciones)
     
-    def graficar_frecuencia_enteros(self, minimo: int, maximo: int, simulaciones):
+    def graficar_frecuencia_enteros(self, minimo: int, maximo: int, simulaciones: int):
         ''' Genera números aleatorios enteros y grafica su frecuencia de aparición.
 
         Parámetros
@@ -82,15 +82,15 @@ class GeneradorAleatorio:
         
         '''
         datos = self.vector_enteros(minimo, maximo, simulaciones)
-        valores, frecuencias = np.unique(datos, return_counts=True)
-
+        valores, frecuencias = np.unique(datos, return_counts = True)
+        
         plt.figure(figsize=(12, 6))
-        plt.bar(valores, frecuencias, color='mediumseagreen', edgecolor='black')
-        plt.title(f"Frecuencia de {simulaciones} números aleatorios en [{minimo}, {maximo}]")
+        plt.bar(valores, frecuencias, color = 'mediumseagreen', edgecolor = 'black')
+        plt.title(f"Frecuencia de {simulaciones} números aleatorios en el intervalo de [{minimo}, {maximo}]")
         plt.xlabel("Número")
         plt.ylabel("Frecuencia")
         plt.xticks(np.arange(minimo, maximo + 1))
-        plt.grid(axis='y', linestyle='--', alpha=0.6)
+        plt.grid(axis = 'y', linestyle = '--', alpha = 0.6)
         plt.tight_layout()
         plt.show()
     
