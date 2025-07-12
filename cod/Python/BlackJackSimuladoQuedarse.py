@@ -13,6 +13,18 @@ import seaborn as sns
 import pandas as pd
 
 def jugar_blackjack_simulado_quedarse(monto):
+    """
+    La función simula el juego de blackjack, pero utilizando una misma estrategia para llevar a cabo diferentes análisis.
+    En este caso, la función simula jugar siempre quedarse, es decir, quedarse con la primera mano recibida.
+
+    Parámetros:
+    -----------
+    monto (int): Recibe el monto, el saldo inicial con el cual la persona comienza a jugar.
+
+    Retorna:
+    ________
+    contador_turnos (int): Devuelve la cantidad de turnos que toma para que el jugador pierda el monto inicial.
+    """
     # Inicializa el balance del jugador con 1000
     balance = monto # En esta simulación, se recibe solo la cantidad apostada inicial, se devolverá la cantidad de turnos que duró en perder.
     # print(f"Tu balance inicial es: ${balance}") # No necesitamos imprimir, quitamos el print.
@@ -35,12 +47,35 @@ def jugar_blackjack_simulado_quedarse(monto):
      
     # Función para repartir cartas
     def dealCard(turn, deck):
+        """
+        Función interna que permite añadir una carta a un mazo.
+
+        Parámetros:
+        ___________
+        turn (List): Recibe una lista, que es la mano del jugador del dealer.
+        deck (list): Recibe el deck creado con los mazos.
+
+        Retorna:
+        ________
+        None: La función no retorna.
+        """
         card = random.choice(deck)  # Elige una carta aleatoria del mazo
         turn.append(card)  # Añade la carta a la mano del jugador o dealer
         deck.remove(card)  # Elimina la carta del mazo para no repetir
 
     # Función para calcular el total de una mano
     def total(turn):
+        """
+         Función interna que tiene el objetivo de devolver el total de la suma de la mano jugada.
+
+         Parámetros:
+         -----------
+         turn (list): Recibe una lista, que es la mano del jugador o del dealer.
+
+         Retorna:
+         --------
+         total (int): Retorna el valor de la suma de las denominaciones de las cartas.
+        """
         total = 0  # Inicializa el total
         face = ['J', 'Q', 'K']  # Cartas que valen 10
         ases = 0  # Contador de ases (pueden valer 11 o 1)
@@ -60,11 +95,22 @@ def jugar_blackjack_simulado_quedarse(monto):
         return total
 
     # Función para mostrar solo una carta del dealer (la otra oculta)
-    def revealDealerHand(dealerHand):
-        return dealerHand[0], 'X'  # Devuelve primera carta y 'X' para la oculta
+    #def revealDealerHand(dealerHand):
+       # return dealerHand[0], 'X'  # Devuelve primera carta y 'X' para la oculta
 
     # Función auxiliar para determinar valor real de cartas (usada en split)
     def valor_real(carta):
+        """
+        Función interna que devuelve el valor de las cartas numéricas.
+
+        Parámetros:
+        -----------
+        carta (str): Recibe el String con la denominación de la carta.
+
+        Retorna:
+        --------
+        carta (int): Retorna el valor numérico de la carta.
+        """
         return 10 if carta in ['J', 'Q', 'K'] else 11 if carta == 'A' else carta
 
     contador_turnos = 0
@@ -303,6 +349,18 @@ print(f"Tiempo de ejecución: {tiempo_ejecucion} segundos")
 
 inicio = time.time()
 def promedio_jugadas(monto, repeticiones=100):
+    """
+    Simula múltiples jugadas actuando como la casa y calcula el promedio del resultado obtenido.
+
+    Parámetros:
+    ----------
+    monto (int): El monto inicial con el que la casa comienza cada simulación.
+    repeticiones (int): Número de veces que se repite la simulación del juego. Defecto es 100.
+
+    Retorna:
+    -------
+    promedio (float): Promedio del dinero final después de cada juego simulado.
+    """
     resultados = [jugar_blackjack_simulado_quedarse(monto) for _ in range(repeticiones)]
     return np.mean(resultados)
 
@@ -321,6 +379,19 @@ print(f"Tiempo de ejecución: {tiempo_ejecucion} segundos")
 
 inicio = time.time()
 def promedio_y_desviacion(monto, repeticiones=100):
+    """
+    Simula múltiples jugadas actuando como la casa y calcula el promedio y la desviación estándar de los resultados obtenidos.
+
+    Parámetros:
+    ----------
+    monto (int): El monto inicial con el que la casa comienza cada simulación.
+    repeticiones (int): Número de veces que se repite la simulación del juego. Defecto es 100.
+
+    Retorna:
+    -------
+    promedio (float): Promedio del dinero final después de cada juego simulado.
+    desviacion (float): Desviación estándar del dinero final después de cada juego simulado.
+    """
     resultados = [jugar_blackjack_simulado_quedarse(monto) for _ in range(repeticiones)]
     return np.mean(resultados), np.std(resultados)
 
