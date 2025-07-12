@@ -11,7 +11,7 @@ class ApuestaRuleta:
 
         Parámetros
         ----------
-        tipo (str): Tipo de apuesta ('numero', 'color', 'paridad', 'alto_bajo', 'docena', 'columna').
+        tipo (str): Tipo de apuesta ('numero', 'color', 'paridad', 'alto_bajo', 'docena', 'columna', 'seisena').
         valor: Valor apostado (puede ser número entero o cadena, dependiendo del tipo de apuesta).
         monto (float): Monto de dinero apostado.
         

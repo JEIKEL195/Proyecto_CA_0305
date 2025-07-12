@@ -4,7 +4,7 @@ Created on Mon Jun  2 23:17:05 2025
 
 @authors: Jeikel Navarro; Cristofer Urrutia; Erick Venegas
 """
-import random  # Con la librería se van a mezclar las cartas.
+import random
 import time 
 import numpy as np
 import seaborn as sns
@@ -12,8 +12,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 def jugar_blackjack_como_casa(monto):
-    """
-    La función simula el juego de blackjack, pero utilizando una misma estrategia para llevar a cabo diferentes análisis.
+    """ La función simula el juego de blackjack, pero utilizando una misma estrategia para llevar a cabo diferentes análisis.
     En este caso, la función simula jugar como la casa, es decir, juega a quedarse siempre que el jugador tenga más de 16.
 
     Parámetros:

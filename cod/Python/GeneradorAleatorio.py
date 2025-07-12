@@ -7,7 +7,6 @@ Created on Wed Jun  4 23:32:52 2025
 
 import numpy as np
 import secrets
-import matplotlib.pyplot as plt
 
 class GeneradorAleatorio:
     def __init__(self):
@@ -67,30 +66,17 @@ class GeneradorAleatorio:
         '''
         return self.__rng.integers(minimo, maximo + 1, size=simulaciones)
     
-    def graficar_frecuencia_enteros(self, minimo: int, maximo: int, simulaciones: int):
-        ''' Genera números aleatorios enteros y grafica su frecuencia de aparición.
-
+    
+    def choice(self, opciones):
+        '''Selecciona un elemento aleatorio de una secuencia dada.
+        
         Parámetros
         ----------
-        minimo (int): Límite inferior del rango (incluido).
-        maximo (int): Límite superior del rango (incluido).
-        simulaciones (int): Número total de simulaciones a realizar.
-
+        opciones: Secuencia de elementos entre los que se elige aleatoriamente.
+        
         Retorna
         -------
-        None
+        (any): Un elemento seleccionado aleatoriamente de la secuencia.
         
         '''
-        datos = self.vector_enteros(minimo, maximo, simulaciones)
-        valores, frecuencias = np.unique(datos, return_counts = True)
-        
-        plt.figure(figsize=(12, 6))
-        plt.bar(valores, frecuencias, color = 'mediumseagreen', edgecolor = 'black')
-        plt.title(f"Frecuencia de {simulaciones} números aleatorios en el intervalo de [{minimo}, {maximo}]")
-        plt.xlabel("Número")
-        plt.ylabel("Frecuencia")
-        plt.xticks(np.arange(minimo, maximo + 1))
-        plt.grid(axis = 'y', linestyle = '--', alpha = 0.6)
-        plt.tight_layout()
-        plt.show()
-    
+        return self.__rng.choice(opciones)

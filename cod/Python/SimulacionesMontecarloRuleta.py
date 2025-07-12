@@ -637,7 +637,7 @@ class SimulacionesMontecarloRuleta:
             'Probabilidad_éxito': prob,
             'IC del 95%': [prob - ic, prob + ic],
             'Promedio_capital_final': np.mean(self.__resultados),
-            'desviacion_std': np.std(self.__resultados),
+            'desviacion_std_capital_final': np.std(self.__resultados),
             'Máximo': max(self.__resultados),
             'Mínimo': min(self.__resultados),
             'Tiempo_promedio': np.mean(self.__historial_tiempo)
@@ -646,18 +646,23 @@ class SimulacionesMontecarloRuleta:
     
     
     def trayectorias(self):
-    ''' Grafica la evolución del saldo del jugador en cada simulación.
-
-    Retorna
-    -------
-    None
-    '''
+        '''Grafica la evolución del saldo del jugador en cada simulación realizada.
+    
+        Parámetros
+        ----------
+        None
+    
+        Retorna
+        -------
+        None
+          
+        '''
         for trayectoria in self.__historiales:
             x = list(range(len(trayectoria)))
             #plt.scatter(x, trayectoria, s=3)
             plt.plot(x, trayectoria, linewidth=1)
     
-        plt.title(f'Trayectorias del saldo del jugador: {self.__jugador_original.nombre}')
+        plt.title(f'Trayectorias del saldo del jugador')
         plt.xlabel('Número de jugadas')
         plt.ylabel('Saldo')
         plt.grid(True)
@@ -665,8 +670,18 @@ class SimulacionesMontecarloRuleta:
         
     
     def graficar_probabilidad(self, factor_objetivo: float, particiones: list):
-        '''Grafica la evolución de la probabilidad de terminar con el capital por un factor objetivo según distintas particiones.'''
+        ''' Grafica la evolución de la probabilidad de alcanzar un capital objetivo según el número de simulaciones.
     
+        Parámetros
+        ----------
+        factor_objetivo (float): Múltiplo del capital inicial que se considera como éxito.
+        particiones (list): Lista de cantidades de simulaciones a considerar progresivamente en el cálculo de la probabilidad.
+    
+        Retorna
+        -------
+        None
+        
+        '''
         total_sim = len(self.__resultados)
         pasos = [particion for particion in particiones if particion <= total_sim]
     
@@ -690,8 +705,20 @@ class SimulacionesMontecarloRuleta:
         
         
     def comparar_estrategias(self, tipo_apuesta: str, valor_apuesta, monto: float, factores_objetivo: list):
-        '''Compara la probabilidad de éxito de Martingala vs Fibonacci para diferentes factores objetivo.'''
+        ''' Compara la efectividad de distintas estrategias de apuesta para alcanzar un objetivo de capital.
+
+        Parámetros
+        ----------
+        tipo_apuesta (str): Tipo de apuesta a realizar (por ejemplo, 'color', 'par', etc.).
+        valor_apuesta: Valor específico de la apuesta (por ejemplo, 'rojo', 'par', etc.).
+        monto (float): Monto base de la apuesta para las simulaciones.
+        factores_objetivo (list): Lista de factores multiplicativos del saldo inicial a alcanzar (e.g., [1.1, 1.2, 1.5, 2]).
+        
+        Retorna
+        -------
+        None
     
+        '''
         resultados1 = []
         resultados2 = []
         resultados3 = []
@@ -776,26 +803,4 @@ class SimulacionesMontecarloRuleta:
         plt.legend()
         plt.tight_layout()
         plt.show()
-
-    
-jugador = JugadorRuleta(nombre = "Venegas", saldo_inicial = 150)
-sim = SimulacionesMontecarloRuleta(jugador, 10, 1)
-#sim.simular('docena', 2, 10)
-#sim.martingala_hasta_objetivo('paridad', 'par', 2, 1.5)
-#sim.martingala_inversa_hasta_objetivo('paridad', 'par', 10, 1.5)
-sim.fibonacci_hasta_objetivo('paridad', 'par', 2, 1.5)
-#sim.oscars_grind_hasta_objetivo('paridad', 'par', 10, 2)
-#sim.dalembert_hasta_objetivo('paridad', 'par', 10, 1.5)
-#sim.uno_tres_dos_seis_hasta_objetivo('paridad', 'par', 1, 1.2)
-
-#sim.james_bond_hasta_objetivo(1, 2)
-#sim.apuesta_fija_hasta_objetivo(10, 1.2)
-
-#sim.comparar_estrategias('paridad', 'par', 4, [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2, 3])
-
-
-#sim.graficar_probabilidad(2, [10, 100, 1000, 10_000])
-sim.trayectorias()
-#sim.estadisticas()
-
-
+        

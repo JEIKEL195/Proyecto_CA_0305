@@ -9,8 +9,7 @@ import random  # Mezcla Cartas.
 import time # Tiempos de Ejecuión.
 
 def jugar_blackjack():
-    '''
-    Función que permite simular el juego de blackjack de manera interactiva.
+    ''' Función que permite simular el juego de blackjack de manera interactiva.
     
     Parámetros
     -----------
