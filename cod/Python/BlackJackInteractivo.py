@@ -12,7 +12,7 @@ def jugar_blackjack():
     '''
     Función que permite simular el juego de blackjack de manera interactiva.
     
-    parámetros
+    Parámetros
     -----------
     None: No recibe ningún parámetro.
     
@@ -41,6 +41,18 @@ def jugar_blackjack():
 
     # Función para repartir cartas
     def dealCard(turn, deck):
+        """
+        Función interna que permite añadir una carta a un mazo.
+
+        Parámetros:
+        ___________
+        turn (List): Recibe una lista, que es la mano del jugador del dealer.
+        deck (list): Recibe el deck creado con los mazos.
+
+        Retorna:
+        ________
+        None: La función no retorna.
+        """
         
         card = random.choice(deck)  # Elige una carta aleatoria del mazo
         turn.append(card)  # Añade la carta a la mano del jugador o dealer
@@ -48,6 +60,17 @@ def jugar_blackjack():
 
     # Función para calcular el total de una mano
     def total(turn):
+        """
+         Función interna que tiene el objetivo de devolver el total de la suma de la mano jugada.
+
+         Parámetros:
+         -----------
+         turn (list): Recibe una lista, que es la mano del jugador o del dealer.
+
+         Retorna:
+         --------
+         total (int): Retorna el valor de la suma de las denominaciones de las cartas.
+        """
         total = 0  # Inicializa el total
         face = ['J', 'Q', 'K']  # Cartas que valen 10
         ases = 0  # Contador de ases (pueden valer 11 o 1)
@@ -68,10 +91,32 @@ def jugar_blackjack():
 
     # Función para mostrar solo una carta del dealer (la otra oculta)
     def revealDealerHand(dealerHand):
-        return dealerHand[0], 'X'  # Devuelve primera carta y 'X' para la oculta
+        """
+        Función interna que muestra la primera carta del dealer y oculta la segunda.
+
+        Parámetros:
+        ----------
+        dealerHand (list): Lista que representa la mano actual del dealer.
+
+        Retorna:
+        -------
+        (tuple): Una tupla con la primera carta visible del dealer y una 'X' que representa la carta oculta.
+        """
+        return dealerHand[0], 'X'
 
     # Función auxiliar para determinar valor real de cartas (usada en split)
     def valor_real(carta):
+        """
+        Función interna que devuelve el valor de las cartas numéricas.
+
+        Parámetros:
+        -----------
+        carta (str): Recibe el String con la denominación de la carta.
+
+        Retorna:
+        --------
+        carta (int): Retorna el valor numérico de la carta.
+        """
         return 10 if carta in ['J', 'Q', 'K'] else 11 if carta == 'A' else carta
 
     # Bucle principal del juego (mientras el jugador tenga dinero)
