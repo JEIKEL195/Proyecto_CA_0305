@@ -1,4 +1,6 @@
-from BlackJackSimuladoModulo import BlackJackSimulador
+from BlackJackSimuladoModulo import BlackjackSimulator
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def ejecutar_simulacion(estrategia = 'quedarse', monto_inicial = 10, repeticiones = 100, rondas = 50):
@@ -18,7 +20,7 @@ def ejecutar_simulacion(estrategia = 'quedarse', monto_inicial = 10, repeticione
     """
 
     montos = list(range(10, 110, 10))
-    simulador = BlackjackSimulador(estrategia = estrategia, monto_inicial = monto_inicial, repeticiones = repeticiones)
+    simulador = BlackjackSimulator(estrategia = estrategia, monto_inicial = monto_inicial, repeticiones = repeticiones)
 
     print(simulador)
     resultados = simulador.simular(montos)
@@ -48,7 +50,7 @@ def comparar_estrategias(repeticiones = 100):
     resultados_todas = {}
 
     for estrategia in estrategias:
-        simulador = BlackjackSimulador(estrategia = estrategia, monto_inicial = 10, repeticiones = repeticiones)
+        simulador = BlackjackSimulator(estrategia = estrategia, monto_inicial = 10, repeticiones = repeticiones)
         resultados = simulador.simular(montos)
         resultados_todas[estrategia] = resultados
 
@@ -85,7 +87,7 @@ def comparar_probabilidad_sobrevivencia(repeticiones = 100):
 
     # Simulaciones
     for estrategia in estrategias:
-        simulador = BlackjackSimulador(estrategia = estrategia, monto_inicial = 10, repeticiones = repeticiones)
+        simulador = BlackjackSimulator(estrategia = estrategia, monto_inicial = 10, repeticiones = repeticiones)
         resultados = simulador.simular(montos)
         resultados_todas[estrategia] = resultados
 
