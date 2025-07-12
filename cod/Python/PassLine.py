@@ -6,6 +6,8 @@ Created on Sat Jun  7 02:20:44 2025
 """
 
 import matplotlib.pyplot as plt
+from scipy.stats import norm
+import numpy as np
 from GeneradorAleatorio import GeneradorAleatorio as ga
 
 class PassLine():
@@ -358,10 +360,10 @@ class PassLine():
              markeredgewidth=1)
         
         plt.axhline(
-        y = self.capital_esperado(porcentaje_apuesta, self.__numero_apuestas),
+        y = 1000,
         color='y',
         linestyle='--',
-        label=f'Capital esperado tras {self.__numero_apuestas} apuestas: {self.capital_esperado(porcentaje_apuesta, self.__numero_apuestas):.2f}'
+        
         )   
         
         plt.xlabel('Número de apuestas')
@@ -390,72 +392,51 @@ class PassLine():
         '''
         return self.__riqueza[0] *( (1 - porcentaje_fijo * 0.0141) ** (num_apuestas) )
     
-apuesta1 = PassLine()
-apuesta1.dinero_apuesta(1000)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-apuesta1.pass_line(0, 0.1)
-
-apuesta1.graficar_riqueza(0.1)
-
+    def graficar_normal_con_probabilidad_positiva(self, num_apuestas):
+        """
+        Grafica la distribución normal aproximada para las ganancias en Pass Line,
+        sombreando el área total bajo la curva y destacando el área donde X > 0.
+    
+        Parámetros
+        ----------
+        num_apuestas : int
+            Número de apuestas realizadas (n).
+        """
+        mu = -0.0141 * num_apuestas
+        sigma = 0.973 * np.sqrt(num_apuestas)
+    
+        # Dominio x y densidad y
+        x = np.linspace(mu - 4*sigma, mu + 4*sigma, 1000)
+        y = norm.pdf(x, mu, sigma)
+    
+        
+        plt.figure(figsize=(8, 5))
+        plt.plot(x, y, color='navy', lw=2, label='Densidad normal')
+        plt.fill_between(x, y, color='skyblue', alpha=0.1)
+        
+        
+        x_pos = x[x > 0]
+        y_pos = y[x > 0]
+        plt.fill_between(x_pos, y_pos, color='limegreen', alpha=0.6, label='Área P(X > 0)')
+    
+        
+        prob_pos = norm.sf(0, mu, sigma)  # sf = 1 - cdf
+        ax = plt.gca()  # Obtiene el eje actual
+        ax.text(
+           0.99, 0.1,  # x, y en coordenadas relativas (esquina inferior derecha)
+           f"P(X > 0) ≈ {prob_pos:.3f}",
+           fontsize=12,
+           color='green',
+           ha='right',
+           va='bottom', 
+           transform=ax.transAxes
+    )
+        plt.axvline(mu, color='red', linestyle='--', label=f'Media: {mu:.2f}')
+    
+        plt.title(f'Distribución Normal Aproximada\nn = {num_apuestas}')
+        plt.xlabel('Ganancia total')
+        plt.ylabel('Densidad')
+        plt.legend()
+        plt.grid(True, alpha=0.3)
+        plt.tight_layout()
+        plt.show()
