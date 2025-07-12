@@ -11,7 +11,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-class BlackjackSimulator:
+class BlackjackSimulador:
     """
     Clase para simular el juego de BlackJack, la clase no tiene intención de ser interactiva.
     Sirve para el análisis de las estrategias más comunes. Analiza el rendimiento según el monto inicial y la estrategia.
